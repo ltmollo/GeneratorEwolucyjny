@@ -1,0 +1,20 @@
+{
+  "mapWidth": 10,
+  "mapHeight": 10,
+  "jungleWidth": 5,
+  "jungleHeight": 5,
+  "nbOfGrassAtTheBeginning": 4,
+  "lengthOfGenotype": 7,
+  "minMutations": 3,
+  "maxMutations": 5,
+  "startEnergy": 30,
+  "moveEnergy": 10,
+  "plantEnergy": 6,
+  "energyForProcreation": 7,
+  "energyForFull": 10,
+  "animalsAtTheBeginning": 5,
+  "globe" : true,
+  "woodenEquator" : false,
+  "fullRandomness" : true,
+  "fullPredestination" : true
+}
