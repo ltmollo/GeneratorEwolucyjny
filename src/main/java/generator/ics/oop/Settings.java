@@ -35,9 +35,9 @@ public class Settings {
         try {
             data = (JSONObject) jsonParser.parse(new FileReader("src/main/resources/parameters.json"));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e + "Błąd wczytu parametrów wejściowych");
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e + "Błąd wczytu parametrów wejśćiowych");
         }
         this.mapWidth = Integer.parseInt(data.get("mapWidth").toString());
         this.mapHeight = Integer.parseInt(data.get("mapHeight").toString());
@@ -58,5 +58,49 @@ public class Settings {
         this.fullRandomness = Boolean.parseBoolean(data.get("fullRandomness").toString());
         this.fullPredestination = Boolean.parseBoolean(data.get("fullPredestination").toString());
         this.saveStatistics =  Boolean.parseBoolean(data.get("saveStatistics").toString());
+
+        if (mapWidth < 2 || mapHeight < 2) {
+            throw new IllegalArgumentException("Mapa musi mieć większe rozmiary");
+        }
+        if (jungleWidth > mapWidth || jungleHeight > mapHeight) {
+            throw new IllegalArgumentException("Jungla musi być mniejsza od mapy");
+        }
+        if (nbOfGrassAtTheBeginning < 1) {
+            throw new IllegalArgumentException("Musi rosnąć trochę trawy");
+        }
+        if (lengthOfGenotype < 2) {
+            throw new IllegalArgumentException("Genotyp musi być trochę dłuższy");
+        }
+        if (minMutations < 0 || minMutations > lengthOfGenotype) {
+            throw new IllegalArgumentException("Uzgodnij wieklkość minimalnej mutacji");
+        }
+        if (maxMutations < 0 || maxMutations > lengthOfGenotype) {
+            throw new IllegalArgumentException("Uzgodnij wielkość maksymalnej mutacji");
+        }
+        if (minMutations > maxMutations) {
+            throw new IllegalArgumentException("Uzgodnij wieklkości mutacji");
+        }
+        if (startEnergy < 1) {
+            throw new IllegalArgumentException("Podaj większą energię startową");
+        }
+        if (moveEnergy < 0) {
+            throw new IllegalArgumentException("moveEnergy musi być liczbą dodatnią");
+        }
+        if(plantEnergy < 0){
+            throw new IllegalArgumentException("plantEnergy musi być liczbą dodatnią");
+        }
+        if(energyForProcreation < 0){
+            throw new IllegalArgumentException("energyForProcreation musi być liczbą dodatnią");
+        }
+        if(energyForFull < 0){
+            throw new IllegalArgumentException("energyForFull musi być liczbą dodatnią");
+        }
+        if(energyForFull < energyForProcreation){
+            throw new IllegalArgumentException("Energia rozmnażania musi być większa niż zwierzaka najedzonego");
+        }
+        if(animalsAtTheBeginning < 1){
+            throw new IllegalArgumentException("Musi być przynajmniej jeden zwierzak");
+        }
+
     }
 }

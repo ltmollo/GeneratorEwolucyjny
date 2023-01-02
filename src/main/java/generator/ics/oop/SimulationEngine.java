@@ -42,6 +42,7 @@ public class SimulationEngine implements Runnable{
 
     public void pauseSimulation(){
         this.pauseSimulation = !this.pauseSimulation;
+        Platform.runLater(this.observer::updateMap);
         System.out.println(this.pauseSimulation);
     }
 
@@ -114,6 +115,10 @@ public class SimulationEngine implements Runnable{
             }
         }
         Platform.runLater(this.observer::updateMap);
+    }
+
+    public int[] getDominantGenotype(){
+        return this.statistics.getDominantGenotype();
     }
 
     private void procreateAnimal(List<Animal> parents){

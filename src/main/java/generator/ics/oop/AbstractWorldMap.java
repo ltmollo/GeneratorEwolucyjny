@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import java.util.*;
 
-public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
+public abstract class AbstractWorldMap implements IPositionChangeObserver{
 
     private final Vector2d lowerLeftBorder;
     private final Vector2d upperRightBorder;
@@ -27,41 +27,35 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
         this.settings = settings;
     }
 
-    @Override
     public boolean checkIfInBoundaries(Vector2d position) {
         return position.precedes(this.upperRightBorder) && position.follows(this.lowerLeftBorder);
     }
 
-    @Override
     public boolean place(Animal animal) {
         this.animals.put(animal.getPosition(), animal);
         animal.addObserver(this);
         return true;
     }
 
-    @Override
     public boolean isGrass(Vector2d position) {
         return this.grassField.get(position) != null ;
     }
 
-    @Override
     public boolean isAnimal(Vector2d position){
         return this.animals.get(position).size() > 0;
     }
 
-    @Override
     public Animal[] AnimalsAt(Vector2d position) {
         Animal[] animals = new Animal[this.animals.get(position).size()];
         this.animals.get(position).toArray(animals);
         return animals;
     }
 
-    @Override
+
     public Grass GrassAt(Vector2d position){
         return this.grassField.get(position);
     }
 
-    @Override
     public void positionChanged (Vector2d oldPosition, Vector2d newPosition, Animal animal){
         this.animals.remove(oldPosition, animal);
         this.animals.put(newPosition, animal);

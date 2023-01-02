@@ -23,7 +23,7 @@ public class GuiElementBox {
         return this.box;
     }
 
-    public GuiElementBox(WorldElement element, Settings settings) {
+    public GuiElementBox(WorldElement element, Settings settings, boolean isDominant) {
         this.settings = settings;
         if(element.toString().equals("grass")){
             try {
@@ -44,21 +44,26 @@ public class GuiElementBox {
                 try {
                     this.image = new Image(new FileInputStream("src/main/resources/animalHalf.jpg"));
                 } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException(e + "Nie znaleziono pliku ze zdjęciem");
                 }
             }else{
                 try {
                     this.image = new Image(new FileInputStream("src/main/resources/animalLow.jpg"));
                 } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException(e + "Nie znaleziono pliku ze zdjęciem");
+                }
+            }
+            if(isDominant){
+                try {
+                    this.image = new Image(new FileInputStream("src/main/resources/redCow.png"));
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e + "Nie znaleziono pliku ze zdjęciem");
                 }
             }
         }
         this.imageView = new ImageView(image);
         this.imageView.setFitWidth(27);
         this.imageView.setFitHeight(27);
-
-
         box.getChildren().addAll((Node) this.imageView);
     }
 }

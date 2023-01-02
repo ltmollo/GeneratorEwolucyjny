@@ -5,6 +5,7 @@ import java.util.Vector;
 
 public interface IWorldMap {
 
+    // The interface is never used. It is more for me just to know what methods I would like to have
     boolean checkIfInBoundaries(Vector2d position);
     /** Check if animal can move to given position
      * it cannot pass boundaries

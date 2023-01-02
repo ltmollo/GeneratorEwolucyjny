@@ -13,10 +13,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 public class App extends Application{
     private GridPane grid = new GridPane();
-    private IWorldMap map;
+    private AbstractWorldMap map;
     private Stage primaryStage;
     private Settings settings;
     private SimulationEngine engine;
@@ -25,12 +26,18 @@ public class App extends Application{
     private Animal animalToFollow;
 
     private VBox drawObject(Vector2d currentPosition){
-        VBox result = null;
+        VBox result;
         if (this.map.isAnimal(currentPosition)) {
             WorldElement object = this.map.getStrongestAnimal(currentPosition);
-            GuiElementBox newElem = new GuiElementBox(object, settings);
-            result = newElem.getBox();
             Animal animal = (Animal) object;
+            GuiElementBox newElem;
+            if(this.engine.getPauseSimulation()){
+                newElem = new GuiElementBox(object, settings, Arrays.equals(animal.getGenotype(), this.engine.getDominantGenotype()));  //show one with the dominant genotype
+            }else{
+                newElem = new GuiElementBox(object, settings, false);   // don't want dominant genotype;
+            }
+            result = newElem.getBox();
+
             if(this.engine.getPauseSimulation()){
                 result.setOnMouseClicked(event -> {this.animalToFollow = animal;});
             }
@@ -38,7 +45,7 @@ public class App extends Application{
 
         else if(this.map.isGrass(currentPosition)) {
             WorldElement object = this.map.GrassAt(currentPosition);
-            GuiElementBox newElem = new GuiElementBox(object, settings);
+            GuiElementBox newElem = new GuiElementBox(object, settings, false);
             result = newElem.getBox();
         }
         else{
@@ -88,11 +95,11 @@ public class App extends Application{
         grid.add(label, 0, 0);
         GridPane.setHalignment(label, HPos.CENTER);
 
-        label = new Label("World Stats:" + "\n" + this.engine.statisticsToDisplay());
-        VBox box = new VBox();
-        box.getChildren().addAll(label);
+        label = new Label("World Stats:" + "\n" + this.engine.statisticsToDisplay());   // show current statistics
+        VBox statsBox = new VBox();
+        statsBox.getChildren().addAll(label);
         grid.getRowConstraints().add(new RowConstraints(10));
-        grid.add(box, haveToiterateX+2, 1 , 20, 6);
+        grid.add(statsBox, haveToiterateX+2, 1 , 20, 6);
 
         if(this.engine.getPauseSimulation()) {
             label = new Label("Continue Simulation");
@@ -100,30 +107,32 @@ public class App extends Application{
         else{
             label = new Label("Pause Simulation");
         }
-        VBox pauseBox = new VBox();
+
+        VBox pauseBox = new VBox();                                                         // pause simulation
         pauseBox.getChildren().addAll(label);
         pauseBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));;
         pauseBox.setOnMouseClicked(event -> {this.engine.pauseSimulation();});
-        grid.add(pauseBox, 0, haveToiterateX+2, 5, 2);
+        grid.add(pauseBox, 0, settings.mapHeight+2, 5, 2);
 
-        VBox endBox = new VBox();
+        VBox endBox = new VBox();                                                           // end simulation
         label = new Label("End Simulation");
         endBox.getChildren().addAll(label);
         endBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
         endBox.setOnMouseClicked(event -> {this.engine.endSimulation();});
-        grid.add(endBox, 6, haveToiterateX+2, 5, 2);
-        if(this.animalToFollow != null){
+        grid.add(endBox, 6, settings.mapHeight+2, 5, 2);
+
+        if(this.animalToFollow != null){                                                // if we follow an animal we display his parameters
             VBox infoBox = new VBox();
             label = new Label("Animal stats: " + "\n" + this.animalToFollow.getInfo());
             infoBox.getChildren().addAll(label);
             grid.add(infoBox, haveToiterateX+2, 8, 20, 5);
 
-            VBox stopFollowBox = new VBox();
+            VBox stopFollowBox = new VBox();                                            // stop following an animal
             label = new Label("Stop following");
             stopFollowBox.getChildren().addAll(label);
             stopFollowBox.setOnMouseClicked(event -> {this.animalToFollow = null;});
             stopFollowBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
-            grid.add(stopFollowBox, 12, haveToiterateX+2, 5, 2);
+            grid.add(stopFollowBox, 12, settings.mapHeight+2, 5, 2);
         }
         Scene scene = new Scene(grid, (haveToiterateX + 2) * 25.5 + + 400, (haveToiterateY + 2) * 25.5 + 40);
         this.primaryStage.setScene(scene);
