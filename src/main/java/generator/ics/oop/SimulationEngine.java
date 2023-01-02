@@ -54,6 +54,10 @@ public class SimulationEngine implements Runnable{
         return (int) ((Math.random() * settings.lengthOfGenotype));
     }
 
+    public String statisticsToDisplay(){
+        return this.statistics.getFullStatistics();
+    }
+
     private void updateStatistics(){
         this.statistics.updateDay();
         this.statistics.updateNumberOfAnimals(this.animals.size() + this.worldMap.getDeadAnimals().size());

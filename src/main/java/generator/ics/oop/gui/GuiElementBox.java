@@ -1,5 +1,6 @@
 package generator.ics.oop.gui;
 import generator.ics.oop.Animal;
+import generator.ics.oop.Settings;
 import generator.ics.oop.WorldElement;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,32 +16,49 @@ import java.io.FileNotFoundException;
 public class GuiElementBox {
     private Image image;
     private ImageView imageView;
-    private Label label;
-    private VBox box = new VBox(-5);  // Uzyj getera nie protected aby nie można było zepsuć wartości
+    private VBox box = new VBox();
+    private final Settings settings;
 
     public VBox getBox(){
         return this.box;
     }
 
-    public GuiElementBox(WorldElement element) {
-        try {
-            this.image = new Image(new FileInputStream(element.getLinkToImage()));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e + "Nie znaleziono pliku ze zdjęciem");
-        }
-        this.imageView = new ImageView(image);
-        this.imageView.setFitWidth(35);
-        this.imageView.setFitHeight(35);
+    public GuiElementBox(WorldElement element, Settings settings) {
+        this.settings = settings;
         if(element.toString().equals("grass")){
-            this.label = new Label("trawa");
+            try {
+                this.image = new Image(new FileInputStream("src/main/resources/grass.png"));
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e + "Nie znaleziono pliku ze zdjęciem");
+            }
         }
         else{
             Animal animal = (Animal) element;
-            Integer energy = Math.max(animal.getEnergy(), 0);
-            this.label = new Label(energy.toString());
+            if(animal.getEnergy() >= this.settings.energyForFull){
+                try {
+                    this.image = new Image(new FileInputStream("src/main/resources/animalFull.jpg"));
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e + "Nie znaleziono pliku ze zdjęciem");
+                }
+            } else if (animal.getEnergy() >= this.settings.energyForFull * 0.5) {
+                try {
+                    this.image = new Image(new FileInputStream("src/main/resources/animalHalf.jpg"));
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }else{
+                try {
+                    this.image = new Image(new FileInputStream("src/main/resources/animalLow.jpg"));
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
+        this.imageView = new ImageView(image);
+        this.imageView.setFitWidth(27);
+        this.imageView.setFitHeight(27);
 
-        box.getChildren().addAll((Node) this.imageView, this.label);
-        box.setPadding(new Insets(1, 0, 1, 4));
+
+        box.getChildren().addAll((Node) this.imageView);
     }
 }

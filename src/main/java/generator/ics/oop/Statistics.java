@@ -75,13 +75,13 @@ public class Statistics {
     }
 
     public String getFullStatistics() {
-        String statistics = "Dzień: " + this.day + "\n";
-        statistics += "Liczba narodzonych zwierząt: " + this.numberOfAnimals + "\n";
-        statistics += "Liczba wyrośniętych kępków trawy: " + this.numberOfGrass + "\n";
-        statistics += "Liczba wolnych pól: " + this.freeSpaces + "\n";
-        statistics += "Dominujący genotyp: " + Arrays.toString(getDominantGenotype()) + "\n";
-        statistics += "Średnia energia zwierzęcia: " + this.averageAnimalEnergy + "\n";
-        statistics += "Średni czas życia zwierzęcia: " + this.averageAnimalLifeTime + "\n";;
+        String statistics = "Day: " + this.day + "\n";
+        statistics += "Born Animals " + this.numberOfAnimals + "\n";
+        statistics += "Nb of Grass " + this.numberOfGrass + "\n";
+        statistics += "Free spots: " + this.freeSpaces + "\n";
+        statistics += "Dominant genotype: " + Arrays.toString(getDominantGenotype()) + "\n";
+        statistics += "Average Animal energy: " + this.averageAnimalEnergy + "\n";
+        statistics += "Average Animal lifetime: " + this.averageAnimalLifeTime + "\n";;
 
         return statistics;
     }

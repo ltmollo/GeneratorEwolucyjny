@@ -14,4 +14,8 @@ public class Jungle {
         this.toLowerLeft = new Vector2d(minX, minY);
         this.toUpperRight = new Vector2d(maxX, maxY);
     }
+
+    public boolean grassInJungle(Vector2d position){
+        return position.follows(this.toLowerLeft) && position.precedes((this.toUpperRight));
+    }
 }
