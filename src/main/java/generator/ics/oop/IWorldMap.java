@@ -40,7 +40,7 @@ public interface IWorldMap {
 
     List<Vector2d> getGrassPositions();
 
-    void eatGrass(Vector2d positon);
+    void grassEaten(Vector2d position);
 
     public List<Vector2d> getAnimalsPositions();
 

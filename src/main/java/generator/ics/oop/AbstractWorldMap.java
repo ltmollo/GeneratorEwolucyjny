@@ -1,6 +1,7 @@
 package generator.ics.oop;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import java.util.*;
 
@@ -13,7 +14,7 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
 
     protected final Settings settings;
 
-    private final Map<Vector2d, Grass> grassField = new HashMap<>();
+    protected final Map<Vector2d, Grass> grassField = new HashMap<>();
     protected final Multimap<Vector2d, Animal> animals = ArrayListMultimap.create();
 
     private final List<Animal> deadAnimals = new ArrayList<>();
@@ -140,12 +141,7 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
         return this.animals.keySet().stream().toList();
     }
 
-    public void eatGrass(Vector2d position){
-        if(!isAnimal(position)){
-            return;
-        }
-        Animal animal = getStrongestAnimal(position);
-        animal.energy += this.settings.plantEnergy;
+    public void grassEaten(Vector2d position){
         this.grassField.remove(position);
     }
 
@@ -203,5 +199,9 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
         animals.add(animalsOnPosition.get(index));
         animals.add(animalsOnPosition.get(secondIndex));
         return animals;
+    }
+
+    public List<Animal> getDeadAnimals(){
+        return ImmutableList.copyOf(this.deadAnimals);
     }
 }

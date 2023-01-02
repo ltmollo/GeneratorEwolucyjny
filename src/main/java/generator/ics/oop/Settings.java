@@ -27,6 +27,7 @@ public class Settings {
     public final boolean woodenEquator;
     public final boolean fullRandomness;
     public final boolean fullPredestination;
+    public final boolean saveStatistics;
 
     public Settings(){
         JSONParser jsonParser = new JSONParser();
@@ -56,5 +57,6 @@ public class Settings {
         this.woodenEquator = Boolean.parseBoolean(data.get("woodenEquator").toString());
         this.fullRandomness = Boolean.parseBoolean(data.get("fullRandomness").toString());
         this.fullPredestination = Boolean.parseBoolean(data.get("fullPredestination").toString());
+        this.saveStatistics =  Boolean.parseBoolean(data.get("saveStatistics").toString());
     }
 }

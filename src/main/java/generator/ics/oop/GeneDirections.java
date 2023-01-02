@@ -14,4 +14,5 @@ public enum GeneDirections {
     GeneDirections(Vector2d vector2d) {
         this.vector2d = vector2d;
     }
+
 }

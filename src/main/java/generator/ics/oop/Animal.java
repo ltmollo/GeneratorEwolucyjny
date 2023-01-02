@@ -9,7 +9,7 @@ public class Animal extends WorldElement {
     protected final int lengthOfGenotype;
     private int lastestGene;
     protected int energy;
-    private final IWorldMap map;
+    private final AbstractWorldMap map;
 
     protected int seed = 0;
     protected int daysAlive = 0;
@@ -19,12 +19,12 @@ public class Animal extends WorldElement {
     private final List<IPositionChangeObserver> observers = new ArrayList<>();
 
 
-    public Animal(Vector2d vector2d, GeneDirections orientation, int[] genotype, IWorldMap map, int energy, IAnimalBehaviour behaviour){
+    public Animal(Vector2d vector2d, GeneDirections orientation, int[] genotype, AbstractWorldMap map, int energy, IAnimalBehaviour behaviour, int latestGene){
         super(vector2d);
         this.orientation = orientation;
         this.genotype = genotype;
         this.map = map;
-        this.lastestGene = -1;
+        this.lastestGene =  latestGene;
         this.lengthOfGenotype = genotype.length;
         this.energy = energy;
         this.behaviour = behaviour;
@@ -64,6 +64,8 @@ public class Animal extends WorldElement {
     }
 
     public boolean getIsDead(){return this.isDead;}
+
+    public int getDaysAlive(){return this.daysAlive;}
 
     public String toString(){
         return "animal";
