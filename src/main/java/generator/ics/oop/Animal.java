@@ -1,6 +1,7 @@
 package generator.ics.oop;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Animal extends WorldElement {
@@ -11,9 +12,11 @@ public class Animal extends WorldElement {
     protected int energy;
     private final AbstractWorldMap map;
 
+    protected boolean isDead = false;
     protected int seed = 0;
     protected int daysAlive = 0;
-    private boolean isDead = false;
+
+    protected int platsEaten = 0;
 
     private final IAnimalBehaviour behaviour;
     private final List<IPositionChangeObserver> observers = new ArrayList<>();
@@ -63,11 +66,25 @@ public class Animal extends WorldElement {
         return this.energy;
     }
 
-    public boolean getIsDead(){return this.isDead;}
-
     public int getDaysAlive(){return this.daysAlive;}
 
     public String toString(){
         return "animal";
+    }
+
+    public String getInfo(){
+        String result = "";
+        result += "Genotype: " + Arrays.toString(this.genotype) + "\n";
+        result += "Activated gene: " + this.genotype[lastestGene] + "\n";
+        result += "Energy: " + Math.max(this.energy,0) + "\n";
+        result += "Eaten plants: " + this.platsEaten + "\n";
+        result += "Childern: " + this.seed + "\n";
+        if(this.isDead){
+            result += "Died on: " + this.daysAlive + "\n";
+        }
+        else{
+            result += "Lives: " + this.daysAlive + " days" + "\n";
+        }
+        return result;
     }
 }

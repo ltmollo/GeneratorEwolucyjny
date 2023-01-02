@@ -18,6 +18,9 @@ public class SimulationEngine implements Runnable{
     private final Settings settings;
     private final List<Animal> animals = new ArrayList<>();
     private final Statistics statistics = new Statistics();
+    private boolean pauseSimulation = false;
+
+    private boolean Simulate = true;
 
     private Vector2d generateNewPosition(){
         int x = (int) (Math.random() * this.settings.mapWidth);
@@ -37,6 +40,19 @@ public class SimulationEngine implements Runnable{
 
     }
 
+    public void pauseSimulation(){
+        this.pauseSimulation = !this.pauseSimulation;
+        System.out.println(this.pauseSimulation);
+    }
+
+    public boolean getPauseSimulation(){
+        return this.pauseSimulation;
+    }
+
+    public void endSimulation(){
+        this.pauseSimulation = false;
+        this.Simulate = false;
+    }
     private void addAnimalsOnTheMap(){
         for(int i=0; i < this.settings.animalsAtTheBeginning; i++){
             Animal animal = new Animal(generateNewPosition(),  generateOrientation(), genotype.createRandomGenotype(), this.worldMap, this.settings.startEnergy, this.animalBehaviour, generateBeginOfGenotype());
@@ -83,6 +99,7 @@ public class SimulationEngine implements Runnable{
     private void removeDeadAnimals(){
         this.animals.forEach(animal -> {
             if(animal.energy <= 0){
+                animal.isDead = true;
               animal.removeObserver(this.positionChangeObserver);
               this.worldMap.deleteAnimal(animal);
                 if(!settings.woodenEquator){
@@ -119,6 +136,7 @@ public class SimulationEngine implements Runnable{
         }
         Animal animal = this.worldMap.getStrongestAnimal(position);
         animal.energy += this.settings.plantEnergy;
+        animal.platsEaten++;
         this.worldMap.grassEaten(position);
     }
 
@@ -131,7 +149,7 @@ public class SimulationEngine implements Runnable{
         }
         try {
             Thread.sleep(300);
-            while(animals.size() > 0) {
+            while(animals.size() > 0 && this.Simulate) {
                 removeDeadAnimals();
                 Thread.sleep(300);
                 int nbOfAnimals = this.animals.size();
@@ -158,6 +176,9 @@ public class SimulationEngine implements Runnable{
                 updateStatistics();
                 if(this.settings.saveStatistics) {
                     statistics.addToFile();
+                }
+                while(this.pauseSimulation){
+                    Thread.onSpinWait();
                 }
             }
             if(this.settings.saveStatistics) {
