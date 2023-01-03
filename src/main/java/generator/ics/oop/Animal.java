@@ -8,11 +8,11 @@ public class Animal extends WorldElement {
     private final int[] genotype;
     protected GeneDirections orientation;
     protected final int lengthOfGenotype;
-    private int lastestGene;
+    private int latestGene;
     protected int energy;
     private final AbstractWorldMap map;
 
-    protected boolean isDead = false;
+    private boolean isDead = false;
     protected int seed = 0;
     protected int daysAlive = 0;
 
@@ -27,15 +27,15 @@ public class Animal extends WorldElement {
         this.orientation = orientation;
         this.genotype = genotype;
         this.map = map;
-        this.lastestGene =  latestGene;
+        this.latestGene =  latestGene;
         this.lengthOfGenotype = genotype.length;
         this.energy = energy;
         this.behaviour = behaviour;
     }
 
     public void move(){
-        this.lastestGene = this.behaviour.nextGen(this.lastestGene);
-        int newOrientation = (this.orientation.ordinal() + this.genotype[this.lastestGene]) % 8;
+        this.latestGene = this.behaviour.nextGen(this.latestGene);
+        int newOrientation = (this.orientation.ordinal() + this.genotype[this.latestGene]) % 8;
         this.orientation = GeneDirections.values()[newOrientation];
         Vector2d newPosition = this.position.add(this.orientation.vector2d);
         Vector2d oldPosition = this.position;
@@ -44,6 +44,10 @@ public class Animal extends WorldElement {
         }
         this.position = newPosition;
         positionChanged(oldPosition, this.position);
+    }
+
+    public void animalDied(){
+        this.isDead = true;
     }
 
     public void addObserver(IPositionChangeObserver observer){
@@ -60,7 +64,7 @@ public class Animal extends WorldElement {
         }
     }
     public int[] getGenotype(){
-        return this.genotype;
+        return this.genotype.clone();                   // immutable copy
     }
     public int getEnergy() {
         return this.energy;
@@ -75,7 +79,7 @@ public class Animal extends WorldElement {
     public String getInfo(){
         String result = "";
         result += "Genotype: " + Arrays.toString(this.genotype) + "\n";
-        result += "Activated gene: " + this.genotype[lastestGene] + "\n";
+        result += "Activated gene: " + this.genotype[latestGene] + "\n";
         result += "Energy: " + Math.max(this.energy,0) + "\n";
         result += "Eaten plants: " + this.platsEaten + "\n";
         result += "Childern: " + this.seed + "\n";

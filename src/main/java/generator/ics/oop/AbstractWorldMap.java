@@ -45,13 +45,6 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver{
         return this.animals.get(position).size() > 0;
     }
 
-    public Animal[] AnimalsAt(Vector2d position) {
-        Animal[] animals = new Animal[this.animals.get(position).size()];
-        this.animals.get(position).toArray(animals);
-        return animals;
-    }
-
-
     public Grass GrassAt(Vector2d position){
         return this.grassField.get(position);
     }
@@ -128,11 +121,11 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver{
     }
 
     public List<Vector2d> getGrassPositions(){
-        return this.grassField.keySet().stream().toList();
+        return ImmutableList.copyOf(this.grassField.keySet().stream().toList());
     }
 
     public List<Vector2d> getAnimalsPositions(){
-        return this.animals.keySet().stream().toList();
+        return ImmutableList.copyOf(this.animals.keySet().stream().toList());
     }
 
     public void grassEaten(Vector2d position){

@@ -31,7 +31,7 @@ public class WoodenEquator extends AbstractPlantGrow {
 
             return new Vector2d(x, y);
         } else {
-            Vector2d vectorToPlace = null;
+            Vector2d vectorToPlace;
             do {
                 vectorToPlace = super.placeGrass(canPlaceInJungle, canPlaceInSteppe);
             } while (vectorToPlace.follows(jungle.toLowerLeft) && vectorToPlace.precedes(jungle.toUpperRight));

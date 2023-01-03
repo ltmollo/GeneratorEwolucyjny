@@ -15,7 +15,7 @@ public class Jungle {
         this.toUpperRight = new Vector2d(maxX, maxY);
     }
 
-    public boolean grassInJungle(Vector2d position){
+    public boolean grassInJungle(Vector2d position){            // To get different look in gui
         return position.follows(this.toLowerLeft) && position.precedes((this.toUpperRight));
     }
 }

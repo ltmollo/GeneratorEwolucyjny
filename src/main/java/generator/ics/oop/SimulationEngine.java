@@ -22,7 +22,7 @@ public class SimulationEngine implements Runnable{
 
     private boolean Simulate = true;
 
-    private Vector2d generateNewPosition(){
+    private Vector2d generateNewPosition(){         // generate positions for animals at the beginning
         int x = (int) (Math.random() * this.settings.mapWidth);
         int y = (int) (Math.random() * this.settings.mapHeight);
         return new Vector2d(x, y);
@@ -54,7 +54,7 @@ public class SimulationEngine implements Runnable{
         this.pauseSimulation = false;
         this.Simulate = false;
     }
-    private void addAnimalsOnTheMap(){
+    private void addAnimalsOnTheMap(){      // Just for initiation
         for(int i=0; i < this.settings.animalsAtTheBeginning; i++){
             Animal animal = new Animal(generateNewPosition(),  generateOrientation(), genotype.createRandomGenotype(), this.worldMap, this.settings.startEnergy, this.animalBehaviour, generateBeginOfGenotype());
             this.animals.add(animal);
@@ -100,7 +100,7 @@ public class SimulationEngine implements Runnable{
     private void removeDeadAnimals(){
         this.animals.forEach(animal -> {
             if(animal.energy <= 0){
-                animal.isDead = true;
+                animal.animalDied();
               animal.removeObserver(this.positionChangeObserver);
               this.worldMap.deleteAnimal(animal);
                 if(!settings.woodenEquator){
@@ -145,11 +145,17 @@ public class SimulationEngine implements Runnable{
         this.worldMap.grassEaten(position);
     }
 
+    private void waitToContinune(){
+        while(this.pauseSimulation){
+            Thread.onSpinWait();
+        }
+    }
+
     public void run(){
 
         addAnimalsOnTheMap();
         Platform.runLater(this.observer::updateMap);
-        if(settings.saveStatistics) {
+        if(settings.saveStatistics) {                       // Create file
             this.statistics.createNewFile();
         }
         try {
@@ -157,15 +163,17 @@ public class SimulationEngine implements Runnable{
             while(animals.size() > 0 && this.Simulate) {
                 removeDeadAnimals();
                 Thread.sleep(300);
+                waitToContinune();
                 int nbOfAnimals = this.animals.size();
                 for (int i = 0; i < nbOfAnimals; i++) {
                     Animal animal = this.animals.get(i);
                     animal.move();
                     animal.energy -= this.settings.moveEnergy;
                     animal.daysAlive++;
-                    Platform.runLater(this.observer::updateMap);
-                    Thread.sleep(300);
+                    waitToContinune();
                 }
+                Platform.runLater(this.observer::updateMap);
+
                 List<Vector2d> grassList = this.worldMap.getGrassPositions();
                 grassList.forEach(this::eatGrass);
                 Thread.sleep(300);
@@ -177,22 +185,22 @@ public class SimulationEngine implements Runnable{
                         procreateAnimal(animalsForProcreation);
                     }
                 });
+                waitToContinune();
                 this.worldMap.initializeTufts();
                 updateStatistics();
                 if(this.settings.saveStatistics) {
-                    statistics.addToFile();
+                    statistics.addToFile();                 // update file
                 }
-                while(this.pauseSimulation){
-                    Thread.onSpinWait();
-                }
+
             }
             if(this.settings.saveStatistics) {
-                statistics.SaveFile();
+                statistics.SaveFile();                      // save file after simulation ends
             }
+            Platform.exit();
         } catch (InterruptedException e) {
             throw new RuntimeException(e + "Przerwano symulację");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e + "Błąd wczytu danych");
         }
     }
 

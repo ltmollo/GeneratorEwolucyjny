@@ -11,7 +11,7 @@ public class ToxicCorpse extends AbstractPlantGrow{
     public int index = 0;
     private final List<Pair<Vector2d, Integer>> deadAnimals = new ArrayList<>();
 
-    public ToxicCorpse(Jungle jungle, Vector2d lowerLeftBoarder, Vector2d upperRightBoarder){
+    public ToxicCorpse(Vector2d lowerLeftBoarder, Vector2d upperRightBoarder){
         super(lowerLeftBoarder, upperRightBoarder);
 
         for(int i = lowerLeftBoarder.x; i <= upperRightBoarder.x; i++){
@@ -30,6 +30,9 @@ public class ToxicCorpse extends AbstractPlantGrow{
         if(!placeOnThePrefer()){
             return super.placeGrass(placeInTheJungle, canPlaceInSteppe);
         }
+        if(this.index >= this.deadAnimals.size()){      // We know that there is still a free space for grass
+            this.index = 0;
+        }
         return this.deadAnimals.get(index).first();
     }
 
@@ -44,7 +47,6 @@ public class ToxicCorpse extends AbstractPlantGrow{
                 break;
             }
         }
-        System.out.println(deadAnimals);
     }
 
     private void addAtCorrectIndex(Pair<Vector2d, Integer> pair){

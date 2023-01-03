@@ -1,8 +1,8 @@
 {
-  "mapWidth": 15,
-  "mapHeight": 12,
-  "jungleWidth": 7,
-  "jungleHeight": 7,
+  "mapWidth": 16,
+  "mapHeight": 6,
+  "jungleWidth": 1,
+  "jungleHeight": 1,
   "nbOfGrassAtTheBeginning": 8,
   "lengthOfGenotype": 5,
   "minMutations": 3,
@@ -13,9 +13,9 @@
   "energyForProcreation": 5,
   "energyForFull": 7,
   "animalsAtTheBeginning": 70,
-  "globe" : false,
-  "woodenEquator" : true,
-  "fullRandomness" : false,
-  "fullPredestination" : false,
+  "globe" : true,
+  "woodenEquator" : false,
+  "fullRandomness" : true,
+  "fullPredestination" : true,
   "saveStatistics" : true
 }

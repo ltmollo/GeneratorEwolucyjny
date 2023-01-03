@@ -2,10 +2,7 @@ package generator.ics.oop.gui;
 import generator.ics.oop.Animal;
 import generator.ics.oop.Settings;
 import generator.ics.oop.WorldElement;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -62,8 +59,8 @@ public class GuiElementBox {
             }
         }
         this.imageView = new ImageView(image);
-        this.imageView.setFitWidth(27);
-        this.imageView.setFitHeight(27);
+        this.imageView.setFitWidth(26.2);
+        this.imageView.setFitHeight(26.2);
         box.getChildren().addAll((Node) this.imageView);
     }
 }

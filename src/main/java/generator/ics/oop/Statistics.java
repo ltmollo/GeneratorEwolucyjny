@@ -71,7 +71,7 @@ public class Statistics {
     }
 
     public int[] getDominantGenotype() {
-        return Collections.max(this.genotypePopularity.entrySet(), Map.Entry.comparingByValue()).getKey();
+        return Collections.max(this.genotypePopularity.entrySet(), Map.Entry.comparingByValue()).getKey().clone();
     }
 
     public String getFullStatistics() {

@@ -59,8 +59,8 @@ public class Settings {
         this.fullPredestination = Boolean.parseBoolean(data.get("fullPredestination").toString());
         this.saveStatistics =  Boolean.parseBoolean(data.get("saveStatistics").toString());
 
-        if (mapWidth < 2 || mapHeight < 2) {
-            throw new IllegalArgumentException("Mapa musi mieć większe rozmiary");
+        if (mapWidth < 3 || mapHeight < 2) {
+            throw new IllegalArgumentException("Mapa musi mieć większe rozmiary, width >= 3, height >= 2");
         }
         if (jungleWidth > mapWidth || jungleHeight > mapHeight) {
             throw new IllegalArgumentException("Jungla musi być mniejsza od mapy");

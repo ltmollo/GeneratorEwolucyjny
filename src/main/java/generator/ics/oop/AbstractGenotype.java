@@ -52,7 +52,7 @@ public abstract class AbstractGenotype implements IGenotype{
         return mutation(newGenotype);
     }
 
-    public int[] createRandomGenotype(){
+    public int[] createRandomGenotype(){                            // for the begging of simulation
         int[] newGenotype = new int[this.settings.lengthOfGenotype];
         for(int i = 0; i < this.settings.lengthOfGenotype; i++){
             newGenotype[i] = generateRandomNumber(0, 7);

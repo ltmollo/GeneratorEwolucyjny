@@ -5,14 +5,11 @@ import generator.ics.oop.*;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import java.awt.event.MouseEvent;
 import java.util.Arrays;
 
 public class App extends Application{
@@ -61,7 +58,7 @@ public class App extends Application{
 
     private void drawMap(){
 
-        AbstractWorldMap myMap = (AbstractWorldMap) map;
+        AbstractWorldMap myMap = map;
         int haveToiterateY = myMap.getUpperRightBorder().y - myMap.getLowerLeftBorder().y;
         int haveToiterateX = myMap.getUpperRightBorder().x - myMap.getLowerLeftBorder().x;
 
@@ -99,7 +96,7 @@ public class App extends Application{
         VBox statsBox = new VBox();
         statsBox.getChildren().addAll(label);
         grid.getRowConstraints().add(new RowConstraints(10));
-        grid.add(statsBox, haveToiterateX+2, 1 , 20, 6);
+        grid.add(statsBox, settings.mapWidth+5, 1 , 20, 6);
 
         if(this.engine.getPauseSimulation()) {
             label = new Label("Continue Simulation");
@@ -112,29 +109,26 @@ public class App extends Application{
         pauseBox.getChildren().addAll(label);
         pauseBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));;
         pauseBox.setOnMouseClicked(event -> {this.engine.pauseSimulation();});
-        grid.add(pauseBox, 0, settings.mapHeight+2, 5, 2);
-
-        VBox endBox = new VBox();                                                           // end simulation
-        label = new Label("End Simulation");
-        endBox.getChildren().addAll(label);
-        endBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
-        endBox.setOnMouseClicked(event -> {this.engine.endSimulation();});
-        grid.add(endBox, 6, settings.mapHeight+2, 5, 2);
+        grid.add(pauseBox, 0, settings.mapHeight+2, 5, 1);
 
         if(this.animalToFollow != null){                                                // if we follow an animal we display his parameters
-            VBox infoBox = new VBox();
-            label = new Label("Animal stats: " + "\n" + this.animalToFollow.getInfo());
-            infoBox.getChildren().addAll(label);
-            grid.add(infoBox, haveToiterateX+2, 8, 20, 5);
 
             VBox stopFollowBox = new VBox();                                            // stop following an animal
             label = new Label("Stop following");
             stopFollowBox.getChildren().addAll(label);
             stopFollowBox.setOnMouseClicked(event -> {this.animalToFollow = null;});
             stopFollowBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
-            grid.add(stopFollowBox, 12, settings.mapHeight+2, 5, 2);
+
+            VBox infoBox = new VBox();
+            label = new Label("Animal stats: " + "\n" + this.animalToFollow.getInfo());
+            infoBox.getChildren().addAll(label, stopFollowBox);
+            grid.add(infoBox, haveToiterateX+2, 8, 20, 5);
+
+
         }
-        Scene scene = new Scene(grid, (haveToiterateX + 2) * 25.5 + + 400, (haveToiterateY + 2) * 25.5 + 40);
+        double width = Math.max((haveToiterateX + 2) * 25.5 + 400, 810);
+        double height = Math.max((haveToiterateY + 2) * 25.5 + 40, 450);
+        Scene scene = new Scene(grid, width, height);
         this.primaryStage.setScene(scene);
 
 
@@ -144,6 +138,10 @@ public class App extends Application{
         grid.getChildren().clear();
         this.grid = new GridPane();
         drawMap();
+    }
+    @Override                               // You can close app like usually
+    public void stop(){
+        this.engine.endSimulation();
     }
 
     public void start(Stage primaryStage) {
@@ -166,7 +164,7 @@ public class App extends Application{
             if(settings.woodenEquator){
                 plantGrow = new WoodenEquator(jungle, new Vector2d(0, 0), new Vector2d(settings.mapWidth-1, settings.mapHeight-1));
             }else {
-                plantGrow = new ToxicCorpse(jungle, new Vector2d(0, 0), new Vector2d(settings.mapWidth-1, settings.mapHeight-1));
+                plantGrow = new ToxicCorpse(new Vector2d(0, 0), new Vector2d(settings.mapWidth-1, settings.mapHeight-1));
             }
             AbstractWorldMap map;
                 if(settings.globe) {
@@ -176,10 +174,10 @@ public class App extends Application{
                 }
                 this.map = map;
                 this.primaryStage = primaryStage;
-                this.engine = new SimulationEngine(animalBehaviour, genotype, plantGrow, (IPositionChangeObserver) map, map,
+                this.engine = new SimulationEngine(animalBehaviour, genotype, plantGrow, map, map,
                 this,settings);
 
-                Label label = new Label("Zwierzak");
+                Label label = new Label("Simulation Begin");
                 Scene scene = new Scene(label, 400, 400);
                 Thread threadEngine = new Thread(engine);
                 threadEngine.start();
@@ -187,10 +185,12 @@ public class App extends Application{
                 drawMap();
                 primaryStage.show();
         } catch (IllegalArgumentException exception) {
-            System.out.println(exception.getMessage());
+            System.out.println("ERROR: " + exception.getMessage());
+            System.exit(0);
         }
         catch (RuntimeException e){
-            System.out.println(e.getMessage());
+            System.out.println("ERROR: " + e.getMessage());
+            System.exit(0);
         }
 
     }

@@ -22,12 +22,6 @@ public class Vector2d {
 
     }
 
-    public Vector2d subtract(Vector2d other){
-        int x = this.x - other.x;
-        int y = this.y - other.y;
-        return new Vector2d(x, y);
-    }
-
     boolean precedes(Vector2d other){
         return this.x <= other.x && this.y <= other.y;
     }
