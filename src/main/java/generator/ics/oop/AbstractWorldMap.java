@@ -10,7 +10,6 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver{
     private final Vector2d lowerLeftBorder;
     private final Vector2d upperRightBorder;
     private final Jungle jungle;
-    private final IPlantGrow plantGrow;
 
     protected final Settings settings;
 
@@ -19,11 +18,10 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver{
 
     private final List<Animal> deadAnimals = new ArrayList<>();
 
-    public AbstractWorldMap(Settings settings, IPlantGrow plantGrow, Jungle jungle){
+    public AbstractWorldMap(Settings settings, Jungle jungle){
         this.lowerLeftBorder = new Vector2d(0, 0);
         this.upperRightBorder = new Vector2d(settings.mapWidth-1, settings.mapHeight-1);
         this.jungle = jungle;
-        this.plantGrow = plantGrow;
         this.settings = settings;
     }
 
@@ -89,27 +87,8 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver{
         return findFreeSpot(this.jungle.toUpperRight.x+1, this.upperRightBorder.x, this.lowerLeftBorder.y, this.upperRightBorder.y);
     }
 
-    public void initializeTufts(){
-        for(int i = 0; i < this.settings.nbOfGrassAtTheBeginning; i++){
-            Vector2d possiblePosition = plantGrow.placeGrass(canPlaceOnJungle(), canPlaceOnSteppe());
-            if (possiblePosition == null) {
-                return;
-            }
-            if(!isGrass(possiblePosition)){
-                this.grassField.put(possiblePosition, new Grass(possiblePosition, this.settings.plantEnergy));
-            }
-            else{
-                if(!settings.woodenEquator){
-                    ToxicCorpse currentPlantGrow = (ToxicCorpse) this.plantGrow;
-                    currentPlantGrow.increaseIndex();
-                }
-                i--;
-            }
-        }
-        if(!settings.woodenEquator){
-            ToxicCorpse currentPlantGrow = (ToxicCorpse) this.plantGrow;
-            currentPlantGrow.restartIndex();
-        }
+    protected void addTuft(Vector2d possiblePosition){
+        this.grassField.put(possiblePosition, new Grass(possiblePosition, this.settings.plantEnergy));
     }
 
     public Vector2d getLowerLeftBorder(){

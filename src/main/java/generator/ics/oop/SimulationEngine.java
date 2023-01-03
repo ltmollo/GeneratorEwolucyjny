@@ -63,6 +63,29 @@ public class SimulationEngine implements Runnable{
         }
     }
 
+    public void initializeTufts(){
+        for(int i = 0; i < this.settings.nbOfGrassAtTheBeginning; i++){
+            Vector2d possiblePosition = plantGrow.placeGrass(worldMap.canPlaceOnJungle(), worldMap.canPlaceOnSteppe());
+            if (possiblePosition == null) {
+                return;
+            }
+            if(!worldMap.isGrass(possiblePosition)){
+                worldMap.addTuft(possiblePosition);
+            }
+            else{
+                if(!settings.woodenEquator){
+                    ToxicCorpse currentPlantGrow = (ToxicCorpse) this.plantGrow;
+                    currentPlantGrow.increaseIndex();
+                }
+                i--;
+            }
+        }
+        if(!settings.woodenEquator){
+            ToxicCorpse currentPlantGrow = (ToxicCorpse) this.plantGrow;
+            currentPlantGrow.restartIndex();
+        }
+    }
+
     private GeneDirections generateOrientation(){
         return GeneDirections.values()[(int) ((Math.random() * 8))];
     }
@@ -186,7 +209,7 @@ public class SimulationEngine implements Runnable{
                     }
                 });
                 waitToContinune();
-                this.worldMap.initializeTufts();
+                this.initializeTufts();
                 updateStatistics();
                 if(this.settings.saveStatistics) {
                     statistics.addToFile();                 // update file

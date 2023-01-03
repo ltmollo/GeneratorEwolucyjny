@@ -2,8 +2,8 @@ package generator.ics.oop;
 
 public class Globe extends AbstractWorldMap{
 
-    public Globe(Settings settings, IPlantGrow plantGrow, Jungle jungle){
-        super(settings, plantGrow, jungle);
+    public Globe(Settings settings, Jungle jungle){
+        super(settings, jungle);
     }
 
     @Override

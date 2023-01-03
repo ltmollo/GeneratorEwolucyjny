@@ -13,9 +13,9 @@
   "energyForProcreation": 5,
   "energyForFull": 7,
   "animalsAtTheBeginning": 70,
-  "globe" : true,
-  "woodenEquator" : false,
-  "fullRandomness" : true,
-  "fullPredestination" : true,
-  "saveStatistics" : true
+  "globe" : false,
+  "woodenEquator" : true,
+  "fullRandomness" : false,
+  "fullPredestination" : false,
+  "saveStatistics" : false
 }

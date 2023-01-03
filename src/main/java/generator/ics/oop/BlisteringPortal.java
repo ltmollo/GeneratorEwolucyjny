@@ -2,8 +2,8 @@ package generator.ics.oop;
 
 public class BlisteringPortal extends AbstractWorldMap {
 
-    public BlisteringPortal(Settings settings, IPlantGrow plantGrow, Jungle jungle){
-        super(settings, plantGrow, jungle);
+    public BlisteringPortal(Settings settings, Jungle jungle){
+        super(settings, jungle);
     }
 
     public int generateNewPosition(int min, int max) {

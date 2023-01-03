@@ -168,9 +168,9 @@ public class App extends Application{
             }
             AbstractWorldMap map;
                 if(settings.globe) {
-                    map = new Globe(settings, plantGrow, jungle);
+                    map = new Globe(settings, jungle);
                 }else{
-                    map = new BlisteringPortal(settings, plantGrow, jungle);
+                    map = new BlisteringPortal(settings, jungle);
                 }
                 this.map = map;
                 this.primaryStage = primaryStage;
