@@ -11,6 +11,7 @@ public enum GeneDirections {
     NORTH_WEST(new Vector2d(-1, 1));
 
     public final Vector2d vector2d;
+
     GeneDirections(Vector2d vector2d) {
         this.vector2d = vector2d;
     }

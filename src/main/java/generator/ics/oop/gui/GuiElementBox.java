@@ -1,4 +1,5 @@
 package generator.ics.oop.gui;
+
 import generator.ics.oop.Animal;
 import generator.ics.oop.Settings;
 import generator.ics.oop.WorldElement;
@@ -16,26 +17,25 @@ public class GuiElementBox {
     private VBox box = new VBox();
     private final Settings settings;
 
-    public VBox getBox(){
+    public VBox getBox() {
         return this.box;
     }
 
     public GuiElementBox(WorldElement element, Settings settings, boolean isDominant) {
         this.settings = settings;
-        if(element.toString().equals("grass")){
+        if (element.toString().equals("grass")) {
             try {
                 this.image = new Image(new FileInputStream("src/main/resources/grass.png"));
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e + "Nie znaleziono pliku ze zdjęciem");
             }
-        }
-        else{
+        } else {
             Animal animal = (Animal) element;
-            if(animal.getEnergy() >= this.settings.energyForFull){
+            if (animal.getEnergy() >= this.settings.energyForFull) {
                 try {
                     this.image = new Image(new FileInputStream("src/main/resources/animalFull.jpg"));
                 } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e + "Nie znaleziono pliku ze zdjęciem");
+                    throw new RuntimeException(e + "Nie znaleziono pliku ze zdjęciem"); // a gdyby całe ciało metody opakować w jeden try-catch?
                 }
             } else if (animal.getEnergy() >= this.settings.energyForFull * 0.5) {
                 try {
@@ -43,14 +43,14 @@ public class GuiElementBox {
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e + "Nie znaleziono pliku ze zdjęciem");
                 }
-            }else{
+            } else {
                 try {
                     this.image = new Image(new FileInputStream("src/main/resources/animalLow.jpg"));
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e + "Nie znaleziono pliku ze zdjęciem");
                 }
             }
-            if(isDominant){
+            if (isDominant) {
                 try {
                     this.image = new Image(new FileInputStream("src/main/resources/redCow.png"));
                 } catch (FileNotFoundException e) {

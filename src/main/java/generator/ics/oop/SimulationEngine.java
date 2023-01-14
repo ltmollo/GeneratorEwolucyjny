@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SimulationEngine implements Runnable{
+public class SimulationEngine implements Runnable {
     private final IAnimalBehaviour animalBehaviour;
     private final IGenotype genotype;
     private final IPlantGrow plantGrow;
@@ -22,14 +22,14 @@ public class SimulationEngine implements Runnable{
 
     private boolean Simulate = true;
 
-    private Vector2d generateNewPosition(){         // generate positions for animals at the beginning
+    private Vector2d generateNewPosition() {         // generate positions for animals at the beginning
         int x = (int) (Math.random() * this.settings.mapWidth);
         int y = (int) (Math.random() * this.settings.mapHeight);
         return new Vector2d(x, y);
     }
 
     public SimulationEngine(IAnimalBehaviour animalBehaviour, IGenotype genotype, IPlantGrow plantGrow, IPositionChangeObserver positionChangeObserver,
-                            AbstractWorldMap worldMap, App observer, Settings settings){
+                            AbstractWorldMap worldMap, App observer, Settings settings) {
         this.animalBehaviour = animalBehaviour;
         this.genotype = genotype;
         this.plantGrow = plantGrow;
@@ -40,79 +40,79 @@ public class SimulationEngine implements Runnable{
 
     }
 
-    public void pauseSimulation(){
+    public void pauseSimulation() {
         this.pauseSimulation = !this.pauseSimulation;
         Platform.runLater(this.observer::updateMap);
         System.out.println(this.pauseSimulation);
     }
 
-    public boolean getPauseSimulation(){
+    public boolean getPauseSimulation() {
         return this.pauseSimulation;
     }
 
-    public void endSimulation(){
+    public void endSimulation() {
         this.pauseSimulation = false;
         this.Simulate = false;
     }
-    private void addAnimalsOnTheMap(){      // Just for initiation
-        for(int i=0; i < this.settings.animalsAtTheBeginning; i++){
-            Animal animal = new Animal(generateNewPosition(),  generateOrientation(), genotype.createRandomGenotype(), this.worldMap, this.settings.startEnergy, this.animalBehaviour, generateBeginOfGenotype());
+
+    private void addAnimalsOnTheMap() {      // Just for initiation
+        for (int i = 0; i < this.settings.animalsAtTheBeginning; i++) {
+            Animal animal = new Animal(generateNewPosition(), generateOrientation(), genotype.createRandomGenotype(), this.worldMap, this.settings.startEnergy, this.animalBehaviour, generateBeginOfGenotype());
             this.animals.add(animal);
             this.worldMap.place(animal);
             this.statistics.updateGenotypePopularity(animal.getGenotype());
         }
     }
 
-    public void initializeTufts(){
-        for(int i = 0; i < this.settings.nbOfGrassAtTheBeginning; i++){
+    public void initializeTufts() {
+        for (int i = 0; i < this.settings.nbOfGrassAtTheBeginning; i++) {
             Vector2d possiblePosition = plantGrow.placeGrass(worldMap.canPlaceOnJungle(), worldMap.canPlaceOnSteppe());
             if (possiblePosition == null) {
                 return;
             }
-            if(!worldMap.isGrass(possiblePosition)){
+            if (!worldMap.isGrass(possiblePosition)) {
                 worldMap.addTuft(possiblePosition);
-            }
-            else{
-                if(!settings.woodenEquator){
+            } else {
+                if (!settings.woodenEquator) {
                     ToxicCorpse currentPlantGrow = (ToxicCorpse) this.plantGrow;
                     currentPlantGrow.increaseIndex();
                 }
                 i--;
             }
         }
-        if(!settings.woodenEquator){
+        if (!settings.woodenEquator) {
             ToxicCorpse currentPlantGrow = (ToxicCorpse) this.plantGrow;
             currentPlantGrow.restartIndex();
         }
     }
 
-    private GeneDirections generateOrientation(){
+    private GeneDirections generateOrientation() {
         return GeneDirections.values()[(int) ((Math.random() * 8))];
     }
 
-    private int generateBeginOfGenotype(){
+    private int generateBeginOfGenotype() {
         return (int) ((Math.random() * settings.lengthOfGenotype));
     }
 
-    public String statisticsToDisplay(){
+    public String statisticsToDisplay() {
         return this.statistics.getFullStatistics();
     }
 
-    private void updateStatistics(){
+    private void updateStatistics() {
         this.statistics.updateDay();
         this.statistics.updateNumberOfAnimals(this.animals.size() + this.worldMap.getDeadAnimals().size());
-        if(this.worldMap.grassField.size() < this.settings.mapWidth * this.settings.mapHeight){
+        if (this.worldMap.grassField.size() < this.settings.mapWidth * this.settings.mapHeight) {
             this.statistics.updateNumberOfTufts(this.settings.nbOfGrassAtTheBeginning);
-        } else{
+        } else {
             this.statistics.updateNumberOfTufts(this.settings.mapWidth * this.settings.mapHeight - this.worldMap.grassField.size());
         }
         this.statistics.updateAverageAnimalEnergy(this.animals);
         this.statistics.updateAverageAnimalLifeTime(this.worldMap.getDeadAnimals());
         this.statistics.restartFreeSpaces();
-        for(int i = 0; i < this.settings.mapWidth; i++){
-            for(int j = 0; j < this.settings.mapHeight; j++){
+        for (int i = 0; i < this.settings.mapWidth; i++) {
+            for (int j = 0; j < this.settings.mapHeight; j++) {
                 Vector2d toCheck = new Vector2d(i, j);
-                if(!this.worldMap.isAnimal(toCheck) && !this.worldMap.isGrass(toCheck)){
+                if (!this.worldMap.isAnimal(toCheck) && !this.worldMap.isGrass(toCheck)) {
                     this.statistics.addFreeSpace();
                 }
             }
@@ -120,33 +120,33 @@ public class SimulationEngine implements Runnable{
 
     }
 
-    private void removeDeadAnimals(){
+    private void removeDeadAnimals() {
         this.animals.forEach(animal -> {
-            if(animal.energy <= 0){
+            if (animal.energy <= 0) {
                 animal.animalDied();
-              animal.removeObserver(this.positionChangeObserver);
-              this.worldMap.deleteAnimal(animal);
-                if(!settings.woodenEquator){
+                animal.removeObserver(this.positionChangeObserver);
+                this.worldMap.deleteAnimal(animal);
+                if (!settings.woodenEquator) {
                     ToxicCorpse currentPlantGrow = (ToxicCorpse) this.plantGrow;
                     currentPlantGrow.addDeadAnimal(animal.getPosition());
                 }
             }
         });
-        for(int i = this.animals.size()-1; i >= 0; i--){
-            if(this.animals.get(i).energy <= 0){
+        for (int i = this.animals.size() - 1; i >= 0; i--) {
+            if (this.animals.get(i).energy <= 0) {
                 this.animals.remove(i);
             }
         }
         Platform.runLater(this.observer::updateMap);
     }
 
-    public int[] getDominantGenotype(){
+    public int[] getDominantGenotype() {
         return this.statistics.getDominantGenotype();
     }
 
-    private void procreateAnimal(List<Animal> parents){
-        if(parents.get(1).energy >= this.settings.energyForFull){    // Second animal is the one with higer energy
-            Animal animal = new Animal(parents.get(0).getPosition(), generateOrientation(), genotype.createGenotype(parents.get(0), parents.get(1)), this.worldMap, 2*this.settings.energyForProcreation, this.animalBehaviour, generateBeginOfGenotype());
+    private void procreateAnimal(List<Animal> parents) {
+        if (parents.get(1).energy >= this.settings.energyForFull) {    // Second animal is the one with higer energy
+            Animal animal = new Animal(parents.get(0).getPosition(), generateOrientation(), genotype.createGenotype(parents.get(0), parents.get(1)), this.worldMap, 2 * this.settings.energyForProcreation, this.animalBehaviour, generateBeginOfGenotype());
             this.animals.add(animal);
             this.worldMap.place(animal);
             this.statistics.updateGenotypePopularity(animal.getGenotype());
@@ -158,8 +158,8 @@ public class SimulationEngine implements Runnable{
         }
     }
 
-    private void eatGrass(Vector2d position){
-        if(!this.worldMap.isAnimal(position)){
+    private void eatGrass(Vector2d position) {
+        if (!this.worldMap.isAnimal(position)) {
             return;
         }
         Animal animal = this.worldMap.getStrongestAnimal(position);
@@ -168,22 +168,22 @@ public class SimulationEngine implements Runnable{
         this.worldMap.grassEaten(position);
     }
 
-    private void waitToContinune(){
-        while(this.pauseSimulation){
+    private void waitToContinune() {
+        while (this.pauseSimulation) {
             Thread.onSpinWait();
         }
     }
 
-    public void run(){
+    public void run() {
 
         addAnimalsOnTheMap();
         Platform.runLater(this.observer::updateMap);
-        if(settings.saveStatistics) {                       // Create file
+        if (settings.saveStatistics) {                       // Create file
             this.statistics.createNewFile();
         }
         try {
             Thread.sleep(300);
-            while(animals.size() > 0 && this.Simulate) {
+            while (animals.size() > 0 && this.Simulate) {
                 removeDeadAnimals();
                 Thread.sleep(300);
                 waitToContinune();
@@ -211,12 +211,12 @@ public class SimulationEngine implements Runnable{
                 waitToContinune();
                 this.initializeTufts();
                 updateStatistics();
-                if(this.settings.saveStatistics) {
+                if (this.settings.saveStatistics) {
                     statistics.addToFile();                 // update file
                 }
 
             }
-            if(this.settings.saveStatistics) {
+            if (this.settings.saveStatistics) {
                 statistics.SaveFile();                      // save file after simulation ends
             }
             Platform.exit();
@@ -226,7 +226,6 @@ public class SimulationEngine implements Runnable{
             throw new RuntimeException(e + "Błąd wczytu danych");
         }
     }
-
 
 
 }

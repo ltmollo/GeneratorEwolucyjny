@@ -1,4 +1,5 @@
 package generator.ics.oop;
+
 import javafx.application.Application;
 import generator.ics.oop.gui.App;
 

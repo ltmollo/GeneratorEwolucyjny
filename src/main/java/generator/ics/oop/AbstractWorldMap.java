@@ -3,9 +3,10 @@ package generator.ics.oop;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
+
 import java.util.*;
 
-public abstract class AbstractWorldMap implements IPositionChangeObserver{
+public abstract class AbstractWorldMap implements IPositionChangeObserver {
 
     private final Vector2d lowerLeftBorder;
     private final Vector2d upperRightBorder;
@@ -18,9 +19,9 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver{
 
     private final List<Animal> deadAnimals = new ArrayList<>();
 
-    public AbstractWorldMap(Settings settings, Jungle jungle){
+    public AbstractWorldMap(Settings settings, Jungle jungle) {
         this.lowerLeftBorder = new Vector2d(0, 0);
-        this.upperRightBorder = new Vector2d(settings.mapWidth-1, settings.mapHeight-1);
+        this.upperRightBorder = new Vector2d(settings.mapWidth - 1, settings.mapHeight - 1);
         this.jungle = jungle;
         this.settings = settings;
     }
@@ -36,33 +37,33 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver{
     }
 
     public boolean isGrass(Vector2d position) {
-        return this.grassField.get(position) != null ;
+        return this.grassField.get(position) != null;
     }
 
-    public boolean isAnimal(Vector2d position){
+    public boolean isAnimal(Vector2d position) {
         return this.animals.get(position).size() > 0;
     }
 
-    public Grass GrassAt(Vector2d position){
+    public Grass GrassAt(Vector2d position) {
         return this.grassField.get(position);
     }
 
-    public void positionChanged (Vector2d oldPosition, Vector2d newPosition, Animal animal){
+    public void positionChanged(Vector2d oldPosition, Vector2d newPosition, Animal animal) {
         this.animals.remove(oldPosition, animal);
         this.animals.put(newPosition, animal);
     }
 
-    public void deleteAnimal(Animal animal){
+    public void deleteAnimal(Animal animal) {
         this.deadAnimals.add(animal);
         this.animals.remove(animal.getPosition(), animal);
     }
 
     public abstract Vector2d encounterBoundary(Vector2d position, Animal animal);
 
-    public boolean findFreeSpot(int beginningX, int endingX,int beginningY, int endingY){
-        for(int x = beginningX; x <= endingX; x++){
-            for(int y = beginningY; y <= endingY; y++){
-                if(!isGrass(new Vector2d(x, y))){
+    public boolean findFreeSpot(int beginningX, int endingX, int beginningY, int endingY) {
+        for (int x = beginningX; x <= endingX; x++) {
+            for (int y = beginningY; y <= endingY; y++) {
+                if (!isGrass(new Vector2d(x, y))) {
                     return true;
                 }
             }
@@ -71,93 +72,94 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver{
     }
 
 
-    public boolean canPlaceOnJungle(){
+    public boolean canPlaceOnJungle() {
         return findFreeSpot(this.jungle.toLowerLeft.x, this.jungle.toUpperRight.x, this.jungle.toLowerLeft.y, this.jungle.toUpperRight.y);
     }
-    public boolean canPlaceOnSteppe(){
-        if(findFreeSpot(this.lowerLeftBorder.x, this.jungle.toLowerLeft.x-1, this.lowerLeftBorder.y, this.upperRightBorder.y-1)){
+
+    public boolean canPlaceOnSteppe() {
+        if (findFreeSpot(this.lowerLeftBorder.x, this.jungle.toLowerLeft.x - 1, this.lowerLeftBorder.y, this.upperRightBorder.y - 1)) {
             return true;
         }
-        if(findFreeSpot(this.jungle.toLowerLeft.x, this.jungle.toUpperRight.x, this.lowerLeftBorder.y, this.jungle.toLowerLeft.y-1)){
+        if (findFreeSpot(this.jungle.toLowerLeft.x, this.jungle.toUpperRight.x, this.lowerLeftBorder.y, this.jungle.toLowerLeft.y - 1)) {
             return true;
         }
-        if(findFreeSpot(this.jungle.toLowerLeft.x, this.jungle.toUpperRight.x, this.jungle.toUpperRight.y+1, this.upperRightBorder.y)){
+        if (findFreeSpot(this.jungle.toLowerLeft.x, this.jungle.toUpperRight.x, this.jungle.toUpperRight.y + 1, this.upperRightBorder.y)) {
             return true;
         }
-        return findFreeSpot(this.jungle.toUpperRight.x+1, this.upperRightBorder.x, this.lowerLeftBorder.y, this.upperRightBorder.y);
+        return findFreeSpot(this.jungle.toUpperRight.x + 1, this.upperRightBorder.x, this.lowerLeftBorder.y, this.upperRightBorder.y);
     }
 
-    protected void addTuft(Vector2d possiblePosition){
+    protected void addTuft(Vector2d possiblePosition) {
         this.grassField.put(possiblePosition, new Grass(possiblePosition, this.settings.plantEnergy));
     }
 
-    public Vector2d getLowerLeftBorder(){
+    public Vector2d getLowerLeftBorder() {
         return this.lowerLeftBorder;
     }
 
-    public Vector2d getUpperRightBorder(){
+    public Vector2d getUpperRightBorder() {
         return this.upperRightBorder;
     }
 
-    public List<Vector2d> getGrassPositions(){
+    public List<Vector2d> getGrassPositions() {
         return ImmutableList.copyOf(this.grassField.keySet().stream().toList());
     }
 
-    public List<Vector2d> getAnimalsPositions(){
+    public List<Vector2d> getAnimalsPositions() {
         return ImmutableList.copyOf(this.animals.keySet().stream().toList());
     }
 
-    public void grassEaten(Vector2d position){
+    public void grassEaten(Vector2d position) {
         this.grassField.remove(position);
     }
 
-    public Animal getStrongestAnimal(Vector2d position){
+    public Animal getStrongestAnimal(Vector2d position) {
         int index = 0;
         List<Animal> animalsOnPostion = this.animals.get(position).stream().toList();
-        for(int i = 0; i<animalsOnPostion.size(); i++){
-            if(compareAnimals(animalsOnPostion.get(index), animalsOnPostion.get(i))){
+        for (int i = 0; i < animalsOnPostion.size(); i++) {
+            if (compareAnimals(animalsOnPostion.get(index), animalsOnPostion.get(i))) {
                 index = i;
             }
         }
         return animalsOnPostion.get(index);
     }
 
-    private boolean compareAnimals(Animal animal1, Animal animal2){
-        if(animal1.energy != animal2.energy){
+    private boolean compareAnimals(Animal animal1, Animal animal2) { // czemu to nie jest kulturalny Comparator?
+        if (animal1.energy != animal2.energy) {
             return animal1.energy > animal2.energy;
         }
 
-        if(animal1.daysAlive != animal2.daysAlive){
+        if (animal1.daysAlive != animal2.daysAlive) {
             return animal1.daysAlive > animal2.daysAlive;
         }
 
-        if(animal1.seed != animal2.seed){
+        if (animal1.seed != animal2.seed) {
             return animal1.seed > animal2.seed;
         }
         return true;
     }
 
-    public List<Animal> getAnimalsForProcreation(Vector2d position){
+    public List<Animal> getAnimalsForProcreation(Vector2d position) {
         int index = 0;
         List<Animal> animalsOnPosition = this.animals.get(position).stream().toList();
-        if(animalsOnPosition.size() < 2){
+        if (animalsOnPosition.size() < 2) {
             return null;
         }
-        for(int i = 1; i < animalsOnPosition.size(); i++){
-            if(!compareAnimals(animalsOnPosition.get(index), animalsOnPosition.get(i))){
+        for (int i = 1; i < animalsOnPosition.size(); i++) {
+            if (!compareAnimals(animalsOnPosition.get(index), animalsOnPosition.get(i))) {
                 index = i;
             }
         }
         int secondIndex = 0;
-        if(index == 0){
+        if (index == 0) {
             secondIndex = 1;
         }
-        for(int i = 0; i<animalsOnPosition.size(); i++){
-            if(i == index){
+        for (int i = 0; i < animalsOnPosition.size(); i++) {
+            if (i == index) {
                 continue;
             }
 
-            if(!compareAnimals(animalsOnPosition.get(secondIndex), animalsOnPosition.get(i))){
+            if (!compareAnimals(animalsOnPosition.get(secondIndex), animalsOnPosition.get(i))) {
                 secondIndex = i;
             }
         }
@@ -167,7 +169,7 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver{
         return animals;
     }
 
-    public List<Animal> getDeadAnimals(){
+    public List<Animal> getDeadAnimals() {
         return ImmutableList.copyOf(this.deadAnimals);
     }
 }

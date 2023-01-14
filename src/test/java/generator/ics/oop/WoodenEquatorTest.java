@@ -1,6 +1,7 @@
 package generator.ics.oop;
 
 import org.junit.jupiter.api.Test;
+
 import static org.testng.AssertJUnit.*;
 
 public class WoodenEquatorTest {
@@ -8,8 +9,9 @@ public class WoodenEquatorTest {
     WoodenEquator grow = new WoodenEquator(jungle, new Vector2d(0, 0), new Vector2d(19, 19));
     boolean canPlace = true;
     boolean cantPlace = false;
+
     @Test
-    public void placeGrass(){
+    public void placeGrass() {
         Vector2d vector1 = grow.placeGrass(canPlace);
         assertTrue(vector1.follows(jungle.toLowerLeft) && vector1.precedes(jungle.toUpperRight));
         assertFalse(vector1.precedes(jungle.toLowerLeft));

@@ -14,15 +14,13 @@ public class WoodenEquator extends AbstractPlantGrow {
         int x;
         int y;
         boolean placeOnThePreferSpot = false;
-        if(canPlaceInJungle && canPlaceInSteppe){
+        if (canPlaceInJungle && canPlaceInSteppe) {
 
 
             placeOnThePreferSpot = placeOnThePrefer();
-        }
-        else if(canPlaceInJungle){
+        } else if (canPlaceInJungle) {
             placeOnThePreferSpot = true;
-        }
-        else if(!canPlaceInSteppe){
+        } else if (!canPlaceInSteppe) {
             return null;
         }
         if (placeOnThePreferSpot) {

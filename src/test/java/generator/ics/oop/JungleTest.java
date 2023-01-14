@@ -1,6 +1,7 @@
 package generator.ics.oop;
 
 import org.junit.jupiter.api.Test;
+
 import static org.testng.AssertJUnit.*;
 
 public class JungleTest {
@@ -9,7 +10,7 @@ public class JungleTest {
     int height = 7;
 
     @Test
-    public void JungleTest(){
+    public void JungleTest() {
         Jungle jungle1 = new Jungle(width, height, 3, 3);
         assertEquals(jungle1.toLowerLeft, new Vector2d(5, 2));
         assertEquals(jungle1.toUpperRight, new Vector2d(7, 4));

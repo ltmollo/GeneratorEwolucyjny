@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ToxicCorpse extends AbstractPlantGrow{
+public class ToxicCorpse extends AbstractPlantGrow {
 
     public int index = 0;
     private final List<Pair<Vector2d, Integer>> deadAnimals = new ArrayList<>();
 
-    public ToxicCorpse(Vector2d lowerLeftBoarder, Vector2d upperRightBoarder){
+    public ToxicCorpse(Vector2d lowerLeftBoarder, Vector2d upperRightBoarder) {
         super(lowerLeftBoarder, upperRightBoarder);
 
-        for(int i = lowerLeftBoarder.x; i <= upperRightBoarder.x; i++){
-            for(int j= lowerLeftBoarder.y; j <= upperRightBoarder.y; j++){
+        for (int i = lowerLeftBoarder.x; i <= upperRightBoarder.x; i++) {
+            for (int j = lowerLeftBoarder.y; j <= upperRightBoarder.y; j++) {
                 Pair<Vector2d, Integer> place = new Pair<>(new Vector2d(i, j), 0);
                 deadAnimals.add(place);         // No dead animals at the beginning
             }
@@ -24,21 +24,21 @@ public class ToxicCorpse extends AbstractPlantGrow{
 
     @Override
     public Vector2d placeGrass(boolean placeInTheJungle, boolean canPlaceInSteppe) {
-        if(!placeInTheJungle && !canPlaceInSteppe){
+        if (!placeInTheJungle && !canPlaceInSteppe) {
             return null;
         }
-        if(!placeOnThePrefer()){
+        if (!placeOnThePrefer()) {
             return super.placeGrass(placeInTheJungle, canPlaceInSteppe);
         }
-        if(this.index >= this.deadAnimals.size()){      // We know that there is still a free space for grass
+        if (this.index >= this.deadAnimals.size()) {      // We know that there is still a free space for grass // nie rozumiem tego warunku
             this.index = 0;
         }
         return this.deadAnimals.get(index).first();
     }
 
-    public void addDeadAnimal(Vector2d position){
-        for(int nbOfPair = 0; nbOfPair < this.deadAnimals.size(); nbOfPair++){
-            if(this.deadAnimals.get(nbOfPair).first().equals(position)){
+    public void addDeadAnimal(Vector2d position) {
+        for (int nbOfPair = 0; nbOfPair < this.deadAnimals.size(); nbOfPair++) {
+            if (this.deadAnimals.get(nbOfPair).first().equals(position)) {
                 Integer newDead = this.deadAnimals.get(nbOfPair).second();
                 newDead++;
                 this.deadAnimals.remove(nbOfPair);
@@ -49,34 +49,34 @@ public class ToxicCorpse extends AbstractPlantGrow{
         }
     }
 
-    private void addAtCorrectIndex(Pair<Vector2d, Integer> pair){
+    private void addAtCorrectIndex(Pair<Vector2d, Integer> pair) {
 
         int min = 0;
-        int max = this.deadAnimals.size()-1;
-        int mid = (max+min)/2;
-        while(min <= max){
-            mid = (max+min)/2;
-            if(this.deadAnimals.get(mid).second() <= pair.second() && mid + 1 < deadAnimals.size() && pair.second() <= deadAnimals.get(mid+1).second()){
+        int max = this.deadAnimals.size() - 1;
+        int mid = (max + min) / 2;
+        while (min <= max) {
+            mid = (max + min) / 2;
+            if (this.deadAnimals.get(mid).second() <= pair.second() && mid + 1 < deadAnimals.size() && pair.second() <= deadAnimals.get(mid + 1).second()) {
                 break;
             }
-            if(this.deadAnimals.get(mid).second() > pair.second()){
-                max = mid-1;
+            if (this.deadAnimals.get(mid).second() > pair.second()) {
+                max = mid - 1;
             }
-            if(this.deadAnimals.get(mid).second() < pair.second()){
-                min = mid+1;
+            if (this.deadAnimals.get(mid).second() < pair.second()) {
+                min = mid + 1;
             }
         }
-        if(max == -1){      // add at the beginning
+        if (max == -1) {      // add at the beginning
             mid = -1;
         }
-        this.deadAnimals.add(mid+1, pair);
+        this.deadAnimals.add(mid + 1, pair);
     }
 
-    public void restartIndex(){
+    public void restartIndex() {
         this.index = 0;
     }
 
-    public void increaseIndex(){
+    public void increaseIndex() {
         this.index++;
     }
 

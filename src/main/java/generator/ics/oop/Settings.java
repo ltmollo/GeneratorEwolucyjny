@@ -29,7 +29,7 @@ public class Settings {
     public final boolean fullPredestination;
     public final boolean saveStatistics;
 
-    public Settings(){
+    public Settings() {
         JSONParser jsonParser = new JSONParser();
         JSONObject data = null;
         try {
@@ -57,7 +57,7 @@ public class Settings {
         this.woodenEquator = Boolean.parseBoolean(data.get("woodenEquator").toString());
         this.fullRandomness = Boolean.parseBoolean(data.get("fullRandomness").toString());
         this.fullPredestination = Boolean.parseBoolean(data.get("fullPredestination").toString());
-        this.saveStatistics =  Boolean.parseBoolean(data.get("saveStatistics").toString());
+        this.saveStatistics = Boolean.parseBoolean(data.get("saveStatistics").toString());
 
         if (mapWidth < 3 || mapHeight < 2) {
             throw new IllegalArgumentException("Mapa musi mieć większe rozmiary, width >= 3, height >= 2");
@@ -86,19 +86,19 @@ public class Settings {
         if (moveEnergy < 0) {
             throw new IllegalArgumentException("moveEnergy musi być liczbą dodatnią");
         }
-        if(plantEnergy < 0){
+        if (plantEnergy < 0) {
             throw new IllegalArgumentException("plantEnergy musi być liczbą dodatnią");
         }
-        if(energyForProcreation < 0){
+        if (energyForProcreation < 0) {
             throw new IllegalArgumentException("energyForProcreation musi być liczbą dodatnią");
         }
-        if(energyForFull < 0){
+        if (energyForFull < 0) {
             throw new IllegalArgumentException("energyForFull musi być liczbą dodatnią");
         }
-        if(energyForFull < energyForProcreation){
+        if (energyForFull < energyForProcreation) {
             throw new IllegalArgumentException("Energia rozmnażania musi być większa niż zwierzaka najedzonego");
         }
-        if(animalsAtTheBeginning < 1){
+        if (animalsAtTheBeginning < 1) {
             throw new IllegalArgumentException("Musi być przynajmniej jeden zwierzak");
         }
 
